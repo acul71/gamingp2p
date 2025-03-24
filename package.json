@@ -1,0 +1,42 @@
+{
+  "name": "gamingp2p",
+  "version": "1.0.0",
+  "description": "Gaming p2p library for browsers",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "build:start": "npm run build && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "acul71",
+  "license": "MIT",
+  "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^14.1.0",
+    "@chainsafe/libp2p-noise": "^16.0.3",
+    "@chainsafe/libp2p-yamux": "^7.0.1",
+    "@libp2p/bootstrap": "^11.0.31",
+    "@libp2p/circuit-relay-v2": "^3.2.7",
+    "@libp2p/identify": "^3.0.26",
+    "@libp2p/interface-peer-id": "^2.0.2",
+    "@libp2p/ping": "^2.0.26",
+    "@libp2p/pubsub-peer-discovery": "^11.0.1",
+    "@libp2p/webrtc": "^5.2.8",
+    "@libp2p/websockets": "^9.2.7",
+    "@libp2p/webtransport": "^5.0.36",
+    "@multiformats/multiaddr": "^12.4.0",
+    "@noble/ed25519": "^2.2.3",
+    "@noble/secp256k1": "^2.2.3",
+    "libp2p": "^2.8.1",
+    "libp2p-gossipsub": "^0.13.0",
+    "libp2p-mplex": "^0.10.7",
+    "libp2p-webrtc-star": "^0.25.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

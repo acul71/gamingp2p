@@ -1,0 +1,35 @@
+{
+  "name": "@libp2p/example-circuit-relay",
+  "version": "0.0.0",
+  "description": "How to use Circuit Relay to connect two nodes",
+  "license": "Apache-2.0 OR MIT",
+  "homepage": "https://github.com/libp2p/js-libp2p-example-circuit-relay#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/libp2p/js-libp2p-examples.git"
+  },
+  "bugs": {
+    "url": "https://github.com/libp2p/js-libp2p-examples/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "test-node-example test/*"
+  },
+  "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^14.1.0",
+    "@chainsafe/libp2p-noise": "^16.0.0",
+    "@chainsafe/libp2p-yamux": "^7.0.0",
+    "@libp2p/circuit-relay-v2": "^3.0.0",
+    "@libp2p/identify": "^3.0.0",
+    "@libp2p/websockets": "^9.0.0",
+    "@multiformats/multiaddr": "^12.3.1",
+    "chalk": "^5.4.1",
+    "debug": "^4.4.0",
+    "jq-web": "^0.6.1",
+    "libp2p": "^2.0.0"
+  },
+  "devDependencies": {
+    "test-ipfs-example": "^1.1.0"
+  },
+  "private": true
+}

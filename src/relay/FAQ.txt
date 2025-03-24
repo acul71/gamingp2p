@@ -1,0 +1,38 @@
+clear; DEBUG=* node relay.js
+
+
+
+- https://blog.libp2p.io/libp2p-webrtc-browser-to-server/
+- Circuit relay stops accepting relay requests https://github.com/libp2p/js-libp2p/issues/2833
+- Dialling a peer and subscribing to a pubsub topic but "subscription-change" event does not always fire #2771 https://github.com/libp2p/js-libp2p/issues/2771
+- circuit-relay-server limits and shades of transient #2622 https://github.com/libp2p/js-libp2p/issues/2622
+
+
+
+
+
+##########################################################################
+The provided code snippet is an interface definition for ReservationStoreInit in the @libp2p/circuit-relay-v2 package. This interface is used to configure the reservation store for a circuit relay server in Libp2p. Here's a breakdown of each property in the interface:
+maxReservations:
+Type: number
+Description: Specifies the maximum number of reservations allowed. This limits how many peers can reserve a relay slot on the server.
+Default: 15
+reservationClearInterval:
+Type: number
+Description: Defines the interval (in milliseconds) after which stale reservations are cleared. This helps manage resources by removing reservations that are no longer active.
+Default: 300000 (5 minutes)
+applyDefaultLimit:
+Type: boolean
+Description: Determines whether default relay limits should be applied to a new reservation. This can include limits on connection duration and data transfer.
+Default: true
+reservationTtl:
+Type: number
+Description: Sets the time-to-live (TTL) for a reservation in milliseconds. After this period, the reservation expires unless renewed.
+Default: 7200000 (2 hours)
+defaultDurationLimit:
+Type: number
+Description: Specifies the maximum time a relayed connection can remain open. This helps prevent long-lived connections that could monopolize resources.
+defaultDataLimit:
+Type: bigint
+Description: Defines the maximum amount of data that can be transferred over a relayed connection. This limit helps control bandwidth usage.
+These properties allow for fine-tuning the behavior of the relay server, balancing between resource management and service availability. The defaults are set to provide a reasonable starting point, but they can be adjusted based on specific use cases and network conditions.
