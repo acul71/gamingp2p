@@ -53,18 +53,99 @@ async function main() {
       streamMuxers: [
         yamux()
       ],
+      connectionManager: {
+        maxConnections: 1000,
+        minConnections: 0,
+        maxIncomingPendingConnections: 500,
+        maxOutgoingPendingConnections: 500,
+        inboundConnectionThreshold: 500,
+        maxParallelDials: 100
+      },
       services: {
         identify: identify(),
         //autoNat: autoNAT(),
-        pubsub: gossipsub(),
-          // relay: circuitRelayServer()
+        pubsub: gossipsub({
+          // Whether to emit messages to self
+          emitSelf: true,
+          // Whether to gossip messages to peers that are not subscribed to the topic
+          gossipIncoming: true,
+          // Whether to fallback to floodsub if gossipsub fails
+          fallbackToFloodsub: true,
+          // Whether to flood publish messages to all peers
+          floodPublish: true,
+          // Whether to allow publishing when there are no peers
+          allowPublishToZeroPeers: true,
+          // Thresholds for peer scoring - negative values prevent pruning
+          scoreThresholds: {
+            // Minimum score required to gossip to a peer
+            gossipThreshold: -1000,
+            // Minimum score required to publish to a peer
+            publishThreshold: -1000,
+            // Minimum score before a peer is graylisted
+            graylistThreshold: -1000,
+            // Minimum score required to accept peer exchange
+            acceptPXThreshold: -1000,
+            // Minimum score for opportunistic grafting
+            opportunisticGraftThreshold: -1000
+          },
+          // Detailed scoring parameters for peer behavior
+          scoreParams: {
+            // Topic-specific scoring parameters
+            topics: {
+              'browser-peer-discovery': {
+                // Weight for topic-specific score
+                topicWeight: 0.1,
+                // Weight for time spent in mesh
+                timeInMeshWeight: 0.01,
+                // Time unit for mesh scoring
+                timeInMeshQuantum: 1000,
+                // Maximum time in mesh to consider
+                timeInMeshCap: 3600,
+                // Weight for first message deliveries
+                firstMessageDeliveriesWeight: 0,
+                // Weight for messages delivered to mesh
+                meshMessageDeliveriesWeight: -0.01,
+                // Decay rate for mesh message deliveries
+                meshMessageDeliveriesDecay: 0.001,
+                // Threshold for mesh message deliveries
+                meshMessageDeliveriesThreshold: 1,
+                // Cap for mesh message deliveries
+                meshMessageDeliveriesCap: 100,
+                // Weight for mesh failure penalties
+                meshFailurePenaltyWeight: -0.01,
+                // Decay rate for mesh failure penalties
+                meshFailurePenaltyDecay: 0.01,
+                // Weight for invalid message deliveries
+                invalidMessageDeliveriesWeight: -0.01,
+                // Decay rate for invalid message deliveries
+                invalidMessageDeliveriesDecay: 0.01
+              }
+            },
+            // Global scoring parameters
+            // Weight for general behavior penalties
+            behaviourPenaltyWeight: -0.01,
+            // Decay rate for behavior penalties
+            behaviourPenaltyDecay: 0.001,
+            // Interval for score decay
+            decayInterval: 1000,
+            // Minimum score before decay to zero
+            decayToZero: 0.01,
+            // Maximum score to retain
+            retainScore: 100000,
+            // Function to calculate application-specific scores
+            appSpecificScore: () => 0,
+            // Weight for IP colocation factor
+            IPColocationFactorWeight: 0,
+            // Threshold for IP colocation
+            IPColocationFactorThreshold: 100
+          }
+        }),
         relay: circuitRelayServer({
-          // disable max reservations limit for demo purposes. in production you
-          // should leave this set to the default of 15 to prevent abuse of your
-          // node by network peers
           reservations: {
-            //maxReservations: Infinity
-            maxReservations: 100 
+            maxReservations: 1000,  // Maximum number of reservations allowed
+            reservationTtl: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
+            defaultDurationLimit: 10 * 60 * 1000, // 10 minutes in milliseconds
+            defaultDataLimit: BigInt(1 << 20) // 1MB instead of default 128KB
           }
         })
       }
@@ -79,22 +160,30 @@ async function main() {
       const connection = evt.detail
       if (connection) {
         logWithTimestamp(`Peer connected: ${connection.toString()}`)
+        // Log current number of relay reservations
+        if (node.services.relay) {
+          const reservationsCount = node.services.relay.reservations.size
+          logWithTimestamp(`Current relay reservations: ${reservationsCount}`)
+        }
       } else {
         logWithTimestamp('Peer connected, but peerId is undefined.')
       }
     })
 
     // Listen for peer discovery events
+    /** 
     node.addEventListener('peer:discovery', (event) => {
       const peerInfo = event.detail
       logWithTimestamp(`Peer discovered: ${colorizeJson(peerInfo)}`)
     })
-
+    */
     // Listen for peer identify events
+    /**
     node.addEventListener('peer:identify', (event) => {
       const identifyResult = event.detail
       logWithTimestamp(`Peer identified: ${colorizeJson(identifyResult)}`)
     })
+    */
 
     // Listen for connection prune events
     node.addEventListener('connection:prune', (event) => {
@@ -103,11 +192,12 @@ async function main() {
     })
 
     // Listen for peer update events
+    /** 
     node.addEventListener('peer:update', (event) => {
       const peerUpdate = event.detail
       logWithTimestamp(`Peer updated: ${colorizeJson(peerUpdate)}`)
     })
-
+    */
     // Listen for self peer update events
     node.addEventListener('self:peer:update', (event) => {
       const selfPeerUpdate = event.detail
@@ -122,6 +212,7 @@ async function main() {
     // Subscribe to the peer discovery topic
     node.services.pubsub.subscribe(PUBSUB_PEER_DISCOVERY)
     
+    /* Temporarily disabled message handler
     // Add handler for received messages
     node.services.pubsub.addEventListener('message', (evt) => {
       const { topic, data, from } = evt.detail
@@ -139,6 +230,7 @@ async function main() {
         logWithTimestamp(`Message received on topic '${topic}' from peer ${from}: ${message}`)
       }
     })
+    */
 
     // Handle shutdown gracefully
     process.on('SIGINT', async () => {

@@ -36,10 +36,10 @@ async function testNetwork() {
   // You can replace these with actual bootstrap peers if you have them
   const network = new GamingNetwork({
     bootstrapList: [
-      //'/ip4/87.106.117.254/tcp/4444/ws/p2p/12D3KooWKhY5TXJLpRk4bUujrVEJ3XGcfyjkNEEVD9JUBojsXhji',
+      //'/ip4/87.106.117.254/tcp/4444/ws/p2p/12D3KooWPp54D8Ng9HPY3sBs6iZ8bb4nbQy1JnbQkUyMryC9Jx5U',
       // '/ip4/87.106.117.254/tcp/4444/ws/',
       //'/ip4/87.106.117.254/tcp/4444/ws/p2p/12D3KooWHd9Ju4bE2E94TwZtMhsXC84f4CRrrYH6bocVoSynroGL',
-      '/ip4/192.168.1.17/tcp/4444/ws/p2p/12D3KooWPeNMU9ZKnmYA1aYsS8tsSf8uJkBfT4r9oURcCdjW6Pot',
+      '/ip4/192.168.1.17/tcp/4444/ws/p2p/12D3KooWRgsaddMhkLQ9hbsxqwM1SbTUbUgEwXSazeNEzGs76zro',
       //'/ip4/192.168.1.17/tcp/9002/p2p/12D3KooWGdKhq1FMaBypcJFy3NK9ii77A2upgGi1ZWV49GLBkMA4'
     ]
   })
